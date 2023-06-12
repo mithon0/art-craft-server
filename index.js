@@ -52,18 +52,24 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    app.post('/jwt',(req,res)=>{
-      const user =req.body
-      const token =jwt.sign(user,process.env.ACCESS_TOKEN_SECRATE,{ expiresIn: '1h' })
-      res.send({token})
+    app.post('/jwt', (req, res) => {
+      const user = req.body
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRATE, { expiresIn: '1h' })
+      res.send({ token })
     })
 
     app.get("/class", async (req, res) => {
       const results = await clsassCollections.find().toArray();
       res.send(results);
     })
+    app.get("/myclass/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email }
+      const results = await clsassCollections.find(query).toArray();
+      res.send(results);
+    })
     app.post("/class", async (req, res) => {
-      const course =req.body;
+      const course = req.body;
       const results = await clsassCollections.insertOne(course);
       res.send(results);
     })
@@ -72,16 +78,16 @@ async function run() {
       res.send(results);
     })
 
-    app.get('/selectclass/:email',async(req,res)=>{
+    app.get('/selectclass/:email', async (req, res) => {
       const email = req.params.email;
       console.log(email);
-      const query = {email: email}
+      const query = { email: email }
       const results = await selectClassCollections.find(query).toArray()
-      
+
       res.send(results)
 
     })
-    app.post('/users',  async(req, res) => {
+    app.post('/users', async (req, res) => {
       const user = req.body;
       console.log(user);
       const filter = { name: user.name, email: user.email, image: user.photoUrl };
@@ -93,13 +99,13 @@ async function run() {
       const result = await usersCollections.insertOne(user);
       res.send(result);
     })
-    app.post('/selectclass',  async(req, res) => {
+    app.post('/selectclass', async (req, res) => {
       const classs = req.body;
-      
+
       const result = await selectClassCollections.insertOne(classs);
       res.send(result);
     })
-    
+
 
     app.get('/users', async (req, res) => {
       const result = await usersCollections.find().toArray();
@@ -115,7 +121,7 @@ async function run() {
     app.get('/users/admin/:email', async (req, res) => {
       const email = req.params.email;
 
-      
+
 
       const query = { email: email }
       const user = await usersCollections.findOne(query);
