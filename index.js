@@ -62,6 +62,11 @@ async function run() {
       const results = await clsassCollections.find().toArray();
       res.send(results);
     })
+    app.post("/class", async (req, res) => {
+      const course =req.body;
+      const results = await clsassCollections.insertOne(course);
+      res.send(results);
+    })
     app.get("/instructor", async (req, res) => {
       const results = await instructorCollections.find().toArray();
       res.send(results);
@@ -115,6 +120,13 @@ async function run() {
       const query = { email: email }
       const user = await usersCollections.findOne(query);
       const result = { admin: user?.role === 'admin' }
+      res.send(result);
+    })
+    app.get('/users/instructor/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email }
+      const user = await usersCollections.findOne(query);
+      const result = { instructor: user?.role === 'instructor' }
       res.send(result);
     })
     app.patch('/users/admin/:id', async (req, res) => {
