@@ -67,7 +67,15 @@ async function run() {
       res.send(results);
     })
 
+    app.get('/selectclass/:email',async(req,res)=>{
+      const email = req.params.email;
+      console.log(email);
+      const query = {email: email}
+      const results = await selectClassCollections.find(query).toArray()
+      
+      res.send(results)
 
+    })
     app.post('/users',  async(req, res) => {
       const user = req.body;
       console.log(user);
@@ -86,6 +94,7 @@ async function run() {
       const result = await selectClassCollections.insertOne(classs);
       res.send(result);
     })
+    
 
     app.get('/users', async (req, res) => {
       const result = await usersCollections.find().toArray();
